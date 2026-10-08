@@ -1,0 +1,115 @@
+.xdlb-badge {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	line-height: 1.7;
+	font-weight: 500;
+	background: #f0f0f1;
+	color: #50575e;
+	vertical-align: middle;
+}
+
+.xdlb-badge--pending { background: #fcf0d4; color: #8a5a00; }
+.xdlb-badge--confirmed { background: #d8f0e3; color: #0f6b3a; }
+.xdlb-badge--completed { background: #dfe8f6; color: #1d4f91; }
+.xdlb-badge--cancelled { background: #f6dede; color: #8a1f1f; }
+
+.wp-list-table .column-status { width: 120px; }
+.wp-list-table .column-booking_date,
+.wp-list-table .column-wedding_date,
+.wp-list-table .column-created_at { width: 150px; }
+
+/* Detail */
+.xdlb-detail .wp-heading-inline { margin-right: 8px; }
+.xdlb-detail-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+	gap: 20px;
+	align-items: start;
+}
+.xdlb-detail-grid .postbox { margin: 0; }
+.xdlb-detail-grid .hndle { padding: 12px; margin: 0; border-bottom: 1px solid #f0f0f1; font-size: 14px; }
+.xdlb-detail table th { color: #50575e; font-weight: 500; }
+.xdlb-actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+.xdlb-actions .button { text-align: center; }
+.xdlb-actions .button-link-delete { margin-top: 8px; text-align: center; }
+
+/* Calendar */
+.xdlb-cal-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin: 16px 0 12px;
+}
+.xdlb-cal-toolbar h2 { margin: 0; font-size: 20px; text-transform: capitalize; }
+.xdlb-cal-toolbar .button { min-width: 36px; text-align: center; }
+.xdlb-legend { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.xdlb-legend a { margin-left: 8px; }
+
+.xdlb-cal {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	border-top: 1px solid #dcdcde;
+	border-left: 1px solid #dcdcde;
+	background: #fff;
+}
+.xdlb-cal-wd {
+	padding: 8px;
+	font-weight: 600;
+	text-align: center;
+	background: #f6f7f7;
+	border-right: 1px solid #dcdcde;
+	border-bottom: 1px solid #dcdcde;
+}
+.xdlb-cal-day {
+	min-height: 110px;
+	padding: 6px;
+	border-right: 1px solid #dcdcde;
+	border-bottom: 1px solid #dcdcde;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	min-width: 0;
+}
+.xdlb-cal-day.is-outside { background: #fafafa; }
+.xdlb-cal-day.is-outside .xdlb-cal-num a { color: #a7aaad; }
+.xdlb-cal-day.is-closed { background: repeating-linear-gradient(135deg, #fafafa, #fafafa 6px, #f3f3f3 6px, #f3f3f3 12px); }
+.xdlb-cal-num { text-align: right; font-weight: 600; }
+.xdlb-cal-num a { text-decoration: none; color: #1d2327; }
+.xdlb-cal-day.is-today .xdlb-cal-num a {
+	display: inline-grid;
+	place-items: center;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: #2271b1;
+	color: #fff;
+}
+.xdlb-cal-event {
+	display: block;
+	padding: 2px 6px;
+	border-radius: 4px;
+	border-left: 3px solid #a7aaad;
+	background: #f0f0f1;
+	color: #1d2327;
+	font-size: 12px;
+	line-height: 1.5;
+	text-decoration: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.xdlb-cal-event:hover { filter: brightness(.96); color: #1d2327; }
+.xdlb-cal-event--pending { background: #fcf0d4; border-color: #dba617; }
+.xdlb-cal-event--confirmed { background: #d8f0e3; border-color: #00a32a; }
+.xdlb-cal-event--completed { background: #dfe8f6; border-color: #2271b1; }
+.xdlb-cal-event--cancelled { background: #f6dede; border-color: #d63638; text-decoration: line-through; }
+
+@media (max-width: 960px) {
+	.xdlb-detail-grid { grid-template-columns: minmax(0, 1fr); }
+	.xdlb-cal-day { min-height: 80px; }
+	.xdlb-cal-event strong { display: block; }
+}

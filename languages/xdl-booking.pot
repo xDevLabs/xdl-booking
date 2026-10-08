@@ -1,0 +1,630 @@
+# Copyright (C) 2026 xDevLabs
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: XDL Booking 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xdl-booking\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-08T14:20:44+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: xdl-booking\n"
+
+#. Plugin Name of the plugin
+#: xdl-booking.php
+msgid "XDL Booking"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: xdl-booking.php
+msgid "https://xdevlabs.com"
+msgstr ""
+
+#. Description of the plugin
+#: xdl-booking.php
+msgid "Appointment booking with calendar, time slots (with buffer between bookings), customer form, admin list/calendar views and email notifications. Use shortcode [xdl_booking] or the Bricks element."
+msgstr ""
+
+#. Author of the plugin
+#: xdl-booking.php
+msgid "xDevLabs"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:52
+#: includes/class-xdl-booking-admin.php:75
+msgid "Settings"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:65
+#: includes/class-xdl-booking-admin.php:66
+#: includes/class-xdl-booking-admin.php:172
+msgid "Bookings"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:73
+#: includes/class-xdl-booking-admin.php:209
+msgid "All bookings"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:74
+#: includes/class-xdl-booking-admin.php:281
+msgid "Booking calendar"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:74
+msgid "Calendar"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:75
+#: includes/class-xdl-booking-admin.php:412
+msgid "Booking settings"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:97
+msgid "Bookings per page"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:130
+#: includes/class-xdl-booking-admin.php:141
+msgid "You are not allowed to do this."
+msgstr ""
+
+#. translators: %d: number of bookings
+#: includes/class-xdl-booking-admin.php:153
+#, php-format
+msgid "%d booking updated."
+msgid_plural "%d bookings updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-xdl-booking-admin.php:156
+msgid "Booking deleted."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:173
+msgid "Calendar view"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:182
+msgid "Search bookings"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:192
+msgid "Booking not found"
+msgstr ""
+
+#. translators: %d: booking ID
+#: includes/class-xdl-booking-admin.php:202
+#, php-format
+msgid "Booking #%d"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:211
+msgid "Show in calendar"
+msgstr ""
+
+#. translators: 1: created date, 2: IP
+#: includes/class-xdl-booking-admin.php:221
+#, php-format
+msgid "Submitted %1$s from IP %2$s"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:227
+msgid "Actions"
+msgstr ""
+
+#. translators: %s: status
+#: includes/class-xdl-booking-admin.php:234
+#: includes/class-xdl-booking-list-table.php:47
+#, php-format
+msgid "Mark as: %s"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:239
+msgid "Email customer"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:240
+#: includes/class-xdl-booking-list-table.php:146
+msgid "Delete this booking permanently?"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:240
+msgid "Delete booking"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:282
+msgid "List view"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:287
+#: includes/class-xdl-booking-frontend.php:42
+#: templates/booking-form.php:25
+msgid "Previous month"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:288
+msgid "Today"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:289
+#: includes/class-xdl-booking-frontend.php:43
+#: templates/booking-form.php:27
+msgid "Next month"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:297
+msgid "Hide cancelled"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:297
+msgid "Show cancelled"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:361
+msgid "Closing time must be after opening time. Hours were reset to defaults."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:397
+msgid "Monday"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:397
+msgid "Tuesday"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:397
+msgid "Wednesday"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:397
+msgid "Thursday"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:397
+msgid "Friday"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:397
+msgid "Saturday"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:397
+msgid "Sunday"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:417
+msgid "Add the booking form to any page with the shortcode"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:419
+msgid "or the \"Booking Form (XDL Booking)\" Bricks element."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:426
+msgid "Schedule"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:429
+msgid "Working days"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:442
+msgid "Opening hours"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:446
+msgid "Closing time"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:447
+msgid "The last appointment must end by closing time."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:451
+msgid "Appointment duration"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:452
+#: includes/class-xdl-booking-admin.php:457
+#: includes/class-xdl-booking-admin.php:464
+msgid "minutes"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:455
+msgid "Gap after each booking"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:458
+msgid "Time kept free after every booking before another appointment can start (default 30)."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:462
+msgid "Slot step"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:465
+msgid "How often start times are offered, e.g. 30 → 09:00, 09:30, 10:00…"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:469
+msgid "Bookings at the same time"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:472
+msgid "Number of customers that can be served in parallel (e.g. fitting rooms or staff)."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:476
+msgid "Minimum notice"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:477
+msgid "hours before the appointment"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:480
+msgid "Book up to"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:481
+msgid "days in advance"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:484
+msgid "Closed dates"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:487
+msgid "One date per line (YYYY-MM-DD) — holidays, days off."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:492
+msgid "Form"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:495
+#: includes/class-xdl-booking-list-table.php:26
+#: includes/class-xdl-booking-mailer.php:91
+#: templates/booking-form.php:90
+msgid "Services"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:498
+msgid "One service per line. Leave empty to hide the services field."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:502
+msgid "Default phone country"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:505
+msgid "Two-letter country code, e.g. vn, us, fr."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:509
+msgid "Accent color"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:513
+msgid "Success message"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:516
+msgid "Shown after a successful booking. Leave empty for the default message."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:521
+msgid "Notifications"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:524
+msgid "Admin emails"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:527
+msgid "Comma-separated. These addresses receive every new booking."
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:531
+msgid "Customer confirmation"
+msgstr ""
+
+#: includes/class-xdl-booking-admin.php:535
+msgid "Email the customer (and CC guest emails) when a booking is received"
+msgstr ""
+
+#: includes/class-xdl-booking-element.php:14
+msgid "Booking Form (XDL Booking)"
+msgstr ""
+
+#: includes/class-xdl-booking-element.php:20
+msgid "Title"
+msgstr ""
+
+#: includes/class-xdl-booking-frontend.php:44
+msgid "No available times on this day. Please choose another date."
+msgstr ""
+
+#: includes/class-xdl-booking-frontend.php:45
+msgid "Loading…"
+msgstr ""
+
+#: includes/class-xdl-booking-frontend.php:46
+msgid "Sending…"
+msgstr ""
+
+#: includes/class-xdl-booking-frontend.php:47
+msgid "Could not load availability. Please refresh the page."
+msgstr ""
+
+#: includes/class-xdl-booking-frontend.php:48
+#: includes/class-xdl-booking-rest.php:71
+msgid "Could not submit your booking. Please try again."
+msgstr ""
+
+#: includes/class-xdl-booking-frontend.php:49
+#: includes/class-xdl-booking-rest.php:154
+msgid "Please enter a valid phone number."
+msgstr ""
+
+#: includes/class-xdl-booking-frontend.php:50
+msgid "Please choose a date and time."
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:24
+msgid "Customer"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:25
+#: includes/class-xdl-booking-mailer.php:85
+msgid "Appointment"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:27
+#: includes/class-xdl-booking-mailer.php:90
+msgid "Wedding date"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:28
+msgid "Status"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:29
+msgid "Booked on"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:49
+#: includes/class-xdl-booking-list-table.php:147
+msgid "Delete"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:62
+msgid "All"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:86
+msgid "From date"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:88
+msgid "To date"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:90
+msgid "Filter"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:121
+msgid "No bookings found."
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:136
+msgid "View"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:138
+msgid "Confirm"
+msgstr ""
+
+#: includes/class-xdl-booking-list-table.php:141
+msgid "Cancel"
+msgstr ""
+
+#. translators: 1: site name, 2: customer name, 3: date/time
+#: includes/class-xdl-booking-mailer.php:23
+#, php-format
+msgid "[%1$s] New booking: %2$s — %3$s"
+msgstr ""
+
+#: includes/class-xdl-booking-mailer.php:30
+msgid "A new appointment has been booked."
+msgstr ""
+
+#: includes/class-xdl-booking-mailer.php:32
+msgid "View booking in admin"
+msgstr ""
+
+#. translators: 1: site name, 2: date/time
+#: includes/class-xdl-booking-mailer.php:51
+#, php-format
+msgid "[%1$s] We received your booking for %2$s"
+msgstr ""
+
+#. translators: %s: customer name
+#: includes/class-xdl-booking-mailer.php:58
+#, php-format
+msgid "Hi %s,"
+msgstr ""
+
+#: includes/class-xdl-booking-mailer.php:61
+msgid "Thank you for booking an appointment with us. Here are the details of your request — we will contact you shortly to confirm."
+msgstr ""
+
+#: includes/class-xdl-booking-mailer.php:86
+msgid "Name"
+msgstr ""
+
+#: includes/class-xdl-booking-mailer.php:87
+#: templates/booking-form.php:58
+msgid "Email"
+msgstr ""
+
+#: includes/class-xdl-booking-mailer.php:88
+#: templates/booking-form.php:64
+msgid "Phone"
+msgstr ""
+
+#: includes/class-xdl-booking-mailer.php:89
+#: templates/booking-form.php:81
+msgid "Guest emails"
+msgstr ""
+
+#: includes/class-xdl-booking-mailer.php:92
+#: templates/booking-form.php:102
+msgid "Note"
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:78
+msgid "Too many booking requests. Please try again later."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:89
+msgid "The system is busy. Please try again."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:94
+msgid "Sorry, this time slot is no longer available. Please choose another time."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:103
+msgid "Could not save your booking. Please try again."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:114
+msgid "Thank you! Your appointment request has been received. We will contact you shortly to confirm."
+msgstr ""
+
+#. translators: 1: date, 2: time
+#: includes/class-xdl-booking-rest.php:122
+#, php-format
+msgid "%1$s at %2$s"
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:136
+msgid "Please choose a date."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:139
+msgid "Please choose a time."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:144
+msgid "Please enter your name."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:149
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:162
+msgid "One or more guest emails are invalid."
+msgstr ""
+
+#. translators: %d: max guests
+#: includes/class-xdl-booking-rest.php:169
+#, php-format
+msgid "You can add up to %d guest emails."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:174
+msgid "Please enter a valid wedding date."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:180
+msgid "Please choose at least one service."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:185
+msgid "Your note is too long."
+msgstr ""
+
+#: includes/class-xdl-booking-rest.php:189
+msgid "Please check the highlighted fields."
+msgstr ""
+
+#: includes/class-xdl-booking.php:133
+msgid "Pending"
+msgstr ""
+
+#: includes/class-xdl-booking.php:134
+msgid "Confirmed"
+msgstr ""
+
+#: includes/class-xdl-booking.php:135
+msgid "Completed"
+msgstr ""
+
+#: includes/class-xdl-booking.php:136
+msgid "Cancelled"
+msgstr ""
+
+#: templates/booking-form.php:23
+msgid "Choose a date"
+msgstr ""
+
+#: templates/booking-form.php:33
+msgid "Choose a time"
+msgstr ""
+
+#: templates/booking-form.php:34
+msgid "Select a date to see available times."
+msgstr ""
+
+#: templates/booking-form.php:40
+msgid "Your details"
+msgstr ""
+
+#: templates/booking-form.php:47
+msgid "Website"
+msgstr ""
+
+#: templates/booking-form.php:52
+msgid "Full name"
+msgstr ""
+
+#: templates/booking-form.php:52
+#: templates/booking-form.php:58
+#: templates/booking-form.php:64
+#: templates/booking-form.php:90
+msgid "required"
+msgstr ""
+
+#: templates/booking-form.php:70
+msgid "When is your wedding date?"
+msgstr ""
+
+#: templates/booking-form.php:78
+msgid "Add guest emails"
+msgstr ""
+
+#: templates/booking-form.php:82
+msgid "mom@example.com, bestie@example.com"
+msgstr ""
+
+#: templates/booking-form.php:83
+msgid "Separate emails with commas. Guests will receive a copy of the confirmation."
+msgstr ""
+
+#: templates/booking-form.php:103
+msgid "Tell us about your style, preferred dresses or anything we should know."
+msgstr ""
+
+#: templates/booking-form.php:109
+msgid "Book appointment"
+msgstr ""
