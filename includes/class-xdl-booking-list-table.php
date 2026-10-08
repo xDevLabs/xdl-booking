@@ -172,7 +172,6 @@ class XDL_Booking_List_Table extends WP_List_Table {
 	}
 
 	protected function column_created_at($item) {
-		$ts = strtotime($item->created_at);
-		return esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $ts));
+		return esc_html(XDL_Booking::format_datetime($item->created_at));
 	}
 }

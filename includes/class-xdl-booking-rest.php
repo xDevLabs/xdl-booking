@@ -90,7 +90,10 @@ final class XDL_Booking_REST {
 		}
 
 		try {
-			if (!in_array(substr($data['start_time'], 0, 5),XDL_Booking_Availability::slots($data['booking_date']), true)) {
+			if (XDL_Booking_Availability::is_too_soon($data['booking_date'], substr($data['start_time'], 0, 5))) {
+				return $this->error('slot_passed', __('This time has already passed or is too soon to book. Please choose a later time.', 'xdl-booking'), 409);
+			}
+			if (!in_array(substr($data['start_time'], 0, 5), XDL_Booking_Availability::slots($data['booking_date']), true)) {
 				return $this->error('slot_taken', __('Sorry, this time slot is no longer available. Please choose another time.', 'xdl-booking'), 409);
 			}
 			$data['ip'] = $ip;

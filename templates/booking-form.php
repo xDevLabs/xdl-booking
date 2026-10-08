@@ -68,7 +68,7 @@ $uid = wp_unique_id('xdlb-');
 
 			<div class="xdlb-field">
 				<label for="<?php echo esc_attr($uid); ?>-wedding"><?php esc_html_e('When is your wedding date?', 'xdl-booking'); ?></label>
-				<input id="<?php echo esc_attr($uid); ?>-wedding" type="date" name="wedding_date" min="<?php echo esc_attr(XDL_Booking_Availability::first_date()); ?>">
+				<input id="<?php echo esc_attr($uid); ?>-wedding" type="date" name="wedding_date" min="<?php echo esc_attr(XDL_Booking_Availability::today()); ?>">
 				<small class="xdlb-error" data-xdlb-error="wedding_date"></small>
 			</div>
 		</div>

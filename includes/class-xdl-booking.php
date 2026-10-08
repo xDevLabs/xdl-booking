@@ -81,7 +81,8 @@ final class XDL_Booking {
 			'buffer'           => 30,
 			'interval'         => 30,
 			'capacity'         => 1,
-			'min_notice_hours' => 2,
+			'min_days_ahead'   => 0,
+			'min_notice_hours' => 0,
 			'max_days_ahead'   => 60,
 			'blocked_dates'    => '',
 			'services'         => "Try on at atelier\nBespoke design consultation\nRental consultation",
@@ -147,12 +148,26 @@ final class XDL_Booking {
 		return apply_filters('xdl_booking_blocking_statuses', array(self::STATUS_PENDING, self::STATUS_CONFIRMED));
 	}
 
+	/** Site timezone (Settings → General); slots, "now" and stored timestamps use it. */
+	public static function timezone() {
+		return wp_timezone();
+	}
+
+	public static function now_mysql() {
+		return (new DateTimeImmutable('now', self::timezone()))->format('Y-m-d H:i:s');
+	}
+
 	public static function format_date($ymd) {
 		if (!$ymd || '0000-00-00' === $ymd) {
 			return '';
 		}
-		$dt = date_create_immutable($ymd, wp_timezone());
-		return $dt ? wp_date(get_option('date_format'), $dt->getTimestamp()) : $ymd;
+		$dt = DateTimeImmutable::createFromFormat('!Y-m-d', $ymd, self::timezone());
+		return $dt ? wp_date(get_option('date_format'), $dt->getTimestamp(), self::timezone()) : $ymd;
+	}
+
+	public static function format_datetime($mysql) {
+		$dt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string) $mysql, self::timezone());
+		return $dt ? wp_date(get_option('date_format') . ' ' . get_option('time_format'), $dt->getTimestamp(), self::timezone()) : (string) $mysql;
 	}
 
 	public static function format_time($his) {

@@ -12,11 +12,17 @@ if (!defined('ABSPATH')) {
 final class XDL_Booking_Availability {
 
 	public static function now() {
-		return new DateTimeImmutable('now', wp_timezone());
+		return new DateTimeImmutable('now', XDL_Booking::timezone());
 	}
 
-	public static function first_date() {
+	public static function today() {
 		return self::now()->format('Y-m-d');
+	}
+
+	/** Earliest bookable date: today + "gap days" (0 = same-day booking allowed). */
+	public static function first_date() {
+		$days = max(0, (int) XDL_Booking::get('min_days_ahead'));
+		return self::now()->modify("+{$days} days")->format('Y-m-d');
 	}
 
 	public static function last_date() {
@@ -25,7 +31,7 @@ final class XDL_Booking_Availability {
 	}
 
 	public static function is_valid_ymd($ymd) {
-		$dt = DateTimeImmutable::createFromFormat('!Y-m-d', (string) $ymd, wp_timezone());
+		$dt = DateTimeImmutable::createFromFormat('!Y-m-d', (string) $ymd, XDL_Booking::timezone());
 		return $dt && $dt->format('Y-m-d') === $ymd;
 	}
 
@@ -33,11 +39,18 @@ final class XDL_Booking_Availability {
 		if (!self::is_valid_ymd($ymd) || $ymd < self::first_date() || $ymd > self::last_date()) {
 			return false;
 		}
-		$weekday = (int) DateTimeImmutable::createFromFormat('!Y-m-d', $ymd, wp_timezone())->format('N');
+		$weekday = (int) DateTimeImmutable::createFromFormat('!Y-m-d', $ymd, XDL_Booking::timezone())->format('N');
 		if (!in_array($weekday, array_map('intval', (array) XDL_Booking::get('working_days')), true)) {
 			return false;
 		}
 		return !in_array($ymd, XDL_Booking::blocked_dates(), true);
+	}
+
+	/** True when the start time has passed or falls inside the minimum notice window. */
+	public static function is_too_soon($ymd, $hm) {
+		$start    = DateTimeImmutable::createFromFormat('!Y-m-d H:i', $ymd . ' ' . $hm, XDL_Booking::timezone());
+		$earliest = self::now()->modify('+' . max(0, (int) XDL_Booking::get('min_notice_hours')) . ' hours');
+		return !$start || $start < $earliest;
 	}
 
 	private static function to_minutes($hm) {
@@ -66,8 +79,6 @@ final class XDL_Booking_Availability {
 		$interval = max(5, (int) XDL_Booking::get('interval'));
 		$capacity = max(1, (int) XDL_Booking::get('capacity'));
 
-		$earliest = self::now()->modify('+' . max(0, (int) XDL_Booking::get('min_notice_hours')) . ' hours');
-
 		$busy = array();
 		foreach ($bookings as $b) {
 			$busy[] = array(self::to_minutes($b->start_time), self::to_minutes($b->end_time));
@@ -75,8 +86,7 @@ final class XDL_Booking_Availability {
 
 		$slots = array();
 		for ($t = $open; $t + $duration <= $close; $t += $interval) {
-			$start_dt = DateTimeImmutable::createFromFormat('!Y-m-d H:i', $ymd . ' ' . self::to_hm($t), wp_timezone());
-			if ($start_dt < $earliest) {
+			if (self::is_too_soon($ymd, self::to_hm($t))) {
 				continue;
 			}
 			$end      = $t + $duration;
@@ -103,7 +113,7 @@ final class XDL_Booking_Availability {
 
 	/** @return array<string,bool> Y-m-d => has free slots, for every day of the month. */
 	public static function month($ym) {
-		$first = DateTimeImmutable::createFromFormat('!Y-m-d', $ym . '-01', wp_timezone());
+		$first = DateTimeImmutable::createFromFormat('!Y-m-d', $ym . '-01', XDL_Booking::timezone());
 		if (!$first) {
 			return array();
 		}

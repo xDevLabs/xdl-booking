@@ -15,6 +15,7 @@ Standalone appointment booking: calendar, time slots with a gap after each booki
 A start time is offered when fewer than "Bookings at the same time" existing bookings overlap it,
 with each booking padded by "Gap after each booking" on both sides. Pending + confirmed bookings block slots.
 The server re-checks availability under a MySQL named lock before saving, so a slot cannot be double-booked.
+"Gap days": 0 = same-day booking allowed, 1 = earliest is tomorrow, etc. Past times and times inside "Minimum notice" (hours) are hidden and rejected. All times use the WordPress timezone (Settings → General).
 
 == Theme override ==
 Copy templates/booking-form.php to {theme}/xdl-booking/booking-form.php.

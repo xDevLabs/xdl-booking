@@ -218,7 +218,7 @@ final class XDL_Booking_Admin {
 						<p class="description">
 							<?php
 							/* translators: 1: created date, 2: IP */
-							echo esc_html(sprintf(__('Submitted %1$s from IP %2$s', 'xdl-booking'), date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($b->created_at)), $b->ip ?: '—'));
+							echo esc_html(sprintf(__('Submitted %1$s from IP %2$s', 'xdl-booking'), XDL_Booking::format_datetime($b->created_at), $b->ip ?: '—'));
 							?>
 						</p>
 					</div>
@@ -248,7 +248,7 @@ final class XDL_Booking_Admin {
 	/* ---------- Calendar ---------- */
 
 	public function render_calendar() {
-		$tz    = wp_timezone();
+		$tz    = XDL_Booking::timezone();
 		$month = sanitize_text_field($_GET['month'] ?? '');
 		$first = preg_match('/^\d{4}-\d{2}$/', $month) ? DateTimeImmutable::createFromFormat('!Y-m-d', $month . '-01', $tz) : false;
 		if (!$first) {
@@ -288,7 +288,7 @@ final class XDL_Booking_Admin {
 					<a class="button" href="<?php echo esc_url(remove_query_arg('month', $base)); ?>"><?php esc_html_e('Today', 'xdl-booking'); ?></a>
 					<a class="button" href="<?php echo esc_url($next); ?>" aria-label="<?php esc_attr_e('Next month', 'xdl-booking'); ?>">&rsaquo;</a>
 				</div>
-				<h2><?php echo esc_html(wp_date('F Y', $first->getTimestamp())); ?></h2>
+				<h2><?php echo esc_html(wp_date('F Y', $first->getTimestamp(), $tz)); ?></h2>
 				<div class="xdlb-legend">
 					<?php foreach (XDL_Booking::statuses() as $key => $label) : ?>
 						<?php echo self::status_badge($key); // phpcs:ignore WordPress.Security.EscapeOutput ?>
@@ -368,6 +368,7 @@ final class XDL_Booking_Admin {
 			'buffer'           => array(0, 240),
 			'interval'         => array(5, 240),
 			'capacity'         => array(1, 50),
+			'min_days_ahead'   => array(0, 365),
 			'min_notice_hours' => array(0, 720),
 			'max_days_ahead'   => array(1, 730),
 		);
@@ -473,12 +474,33 @@ final class XDL_Booking_Admin {
 						</td>
 					</tr>
 					<tr>
+						<th scope="row"><label for="xdlb-min_days_ahead"><?php esc_html_e('Gap days', 'xdl-booking'); ?></label></th>
+						<td>
+							<?php $number('min_days_ahead', 0, 365, __('days before the earliest bookable date', 'xdl-booking')); ?>
+							<p class="description"><?php esc_html_e('0 = customers can book today (e.g. at 08:00 book 09:00 if free). 1 = earliest is tomorrow. 2 = the day after tomorrow, and so on.', 'xdl-booking'); ?></p>
+						</td>
+					</tr>
+					<tr>
 						<th scope="row"><label for="xdlb-min_notice_hours"><?php esc_html_e('Minimum notice', 'xdl-booking'); ?></label></th>
-						<td><?php $number('min_notice_hours', 0, 720, __('hours before the appointment', 'xdl-booking')); ?></td>
+						<td><?php $number('min_notice_hours', 0, 720, __('hours before the appointment', 'xdl-booking')); ?>
+							<p class="description"><?php esc_html_e('For same-day bookings: how many hours ahead a time must be. 0 = any time that has not started yet.', 'xdl-booking'); ?></p>
+						</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="xdlb-max_days_ahead"><?php esc_html_e('Book up to', 'xdl-booking'); ?></label></th>
 						<td><?php $number('max_days_ahead', 1, 730, __('days in advance', 'xdl-booking')); ?></td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e('Timezone', 'xdl-booking'); ?></th>
+						<td>
+							<p>
+								<?php
+								/* translators: 1: timezone, 2: current time */
+								echo esc_html(sprintf(__('Opening hours and past times use the site timezone: %1$s (now %2$s).', 'xdl-booking'), wp_timezone_string(), XDL_Booking::format_datetime(XDL_Booking::now_mysql())));
+								?>
+								<a href="<?php echo esc_url(admin_url('options-general.php#timezone_string')); ?>"><?php esc_html_e('Change', 'xdl-booking'); ?></a>
+							</p>
+						</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="xdlb-blocked"><?php esc_html_e('Closed dates', 'xdl-booking'); ?></label></th>

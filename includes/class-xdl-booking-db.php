@@ -45,7 +45,7 @@ final class XDL_Booking_DB {
 
 	public static function insert(array $data) {
 		global $wpdb;
-		$now = current_time('mysql');
+		$now = XDL_Booking::now_mysql();
 		$ok  = $wpdb->insert(self::table(), array_merge($data, array(
 			'created_at' => $now,
 			'updated_at' => $now,
@@ -70,7 +70,7 @@ final class XDL_Booking_DB {
 		}
 		$ok = $wpdb->update(
 			self::table(),
-			array('status' => $status, 'updated_at' => current_time('mysql')),
+			array('status' => $status, 'updated_at' => XDL_Booking::now_mysql()),
 			array('id' => absint($id))
 		);
 		if ($ok && $row->status !== $status) {
