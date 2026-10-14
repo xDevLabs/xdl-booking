@@ -95,28 +95,32 @@ final class XDL_Booking_GCal {
 
 	/* ---------- Jobs ---------- */
 
+	/** @return true|WP_Error */
 	public static function sync($id, $attempt = 1) {
+		if (!XDL_Booking::get('gcal_enabled')) {
+			return new WP_Error('xdlb_gcal_off', __('Google Calendar sync is turned off in Bookings → Settings.', 'xdl-booking'));
+		}
 		if (!self::enabled()) {
-			return;
+			return new WP_Error('xdlb_gcal_config', __('Enter a calendar ID and valid service account credentials first.', 'xdl-booking'));
 		}
 		$b = XDL_Booking_DB::get($id);
 		if (!$b) {
-			return;
+			return new WP_Error('xdlb_gcal_missing', __('Booking not found.', 'xdl-booking'));
 		}
 
 		$event_id = (string) $b->gcal_event_id;
 
 		if (XDL_Booking::STATUS_CANCELLED === $b->status) {
 			if ('' === $event_id) {
-				return;
+				return true;
 			}
 			$res = self::request('DELETE', 'events/' . rawurlencode($event_id));
 			if (is_wp_error($res) && !in_array($res->get_error_data()['status'] ?? 0, array(404, 410), true)) {
 				self::retry(self::HOOK_SYNC, (int) $id, $attempt, $res);
-				return;
+				return $res;
 			}
 			XDL_Booking_DB::set_gcal_event_id($id, '');
-			return;
+			return true;
 		}
 
 		$event = self::event_body($b);
@@ -128,12 +132,18 @@ final class XDL_Booking_GCal {
 		}
 		if (is_wp_error($res)) {
 			self::retry(self::HOOK_SYNC, (int) $id, $attempt, $res);
-			return;
+			return $res;
 		}
 		if (!empty($res['id']) && $res['id'] !== $event_id) {
 			XDL_Booking_DB::set_gcal_event_id($id, $res['id']);
 		}
 		delete_option(self::ERROR_OPTION);
+		return true;
+	}
+
+	/** Runs a sync immediately (no cron, no retries) so admins see the result. */
+	public static function sync_now($id) {
+		return self::sync($id, self::MAX_ATTEMPTS);
 	}
 
 	public static function delete($event_id, $attempt = 1) {

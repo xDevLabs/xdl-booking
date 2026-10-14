@@ -19,6 +19,7 @@ final class XDL_Booking_Admin {
 		add_action('admin_post_xdl_booking_status', array($this, 'handle_status'));
 		add_action('admin_post_xdl_booking_delete', array($this, 'handle_delete'));
 		add_action('admin_post_xdl_booking_gcal_test', array($this, 'handle_gcal_test'));
+		add_action('admin_post_xdl_booking_gcal_sync', array($this, 'handle_gcal_sync'));
 		add_filter('set-screen-option', array($this, 'save_screen_option'), 10, 3);
 		add_filter('plugin_action_links_' . plugin_basename(XDL_BOOKING_FILE), array($this, 'plugin_links'));
 	}
@@ -158,11 +159,30 @@ final class XDL_Booking_Admin {
 		exit;
 	}
 
+	public function handle_gcal_sync() {
+		$id = absint($_GET['id'] ?? 0);
+		if (!current_user_can(XDL_Booking::capability())) {
+			wp_die(esc_html__('You are not allowed to do this.', 'xdl-booking'), 403);
+		}
+		check_admin_referer('xdl_booking_gcal_sync_' . $id);
+		$result = XDL_Booking_GCal::sync_now($id);
+		$arg    = is_wp_error($result) ? array('xdlb_gcal_sync' => 'fail', 'xdlb_gcal_msg' => rawurlencode($result->get_error_message())) : array('xdlb_gcal_sync' => 'ok');
+		wp_safe_redirect(add_query_arg($arg, self::view_url($id)));
+		exit;
+	}
+
 	private function notices() {
 		if (isset($_GET['xdlb_updated'])) {
 			$n = absint($_GET['xdlb_updated']);
 			/* translators: %d: number of bookings */
 			printf('<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html(sprintf(_n('%d booking updated.', '%d bookings updated.', $n, 'xdl-booking'), $n)));
+		}
+		if ('ok' === ($_GET['xdlb_gcal_sync'] ?? '')) {
+			printf('<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html__('Synced to Google Calendar.', 'xdl-booking'));
+		}
+		if ('fail' === ($_GET['xdlb_gcal_sync'] ?? '')) {
+			/* translators: %s: error message */
+			printf('<div class="notice notice-error is-dismissible"><p>%s</p></div>', esc_html(sprintf(__('Google Calendar sync failed: %s', 'xdl-booking'), sanitize_text_field(rawurldecode(wp_unslash($_GET['xdlb_gcal_msg'] ?? ''))))));
 		}
 		if (isset($_GET['xdlb_deleted'])) {
 			printf('<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html__('Booking deleted.', 'xdl-booking'));
@@ -249,6 +269,14 @@ final class XDL_Booking_Admin {
 							<?php endif; ?>
 						<?php endforeach; ?>
 						<a class="button" href="mailto:<?php echo esc_attr($b->email); ?>"><?php esc_html_e('Email customer', 'xdl-booking'); ?></a>
+						<a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=xdl_booking_gcal_sync&id=' . (int) $b->id), 'xdl_booking_gcal_sync_' . (int) $b->id)); ?>"><?php esc_html_e('Sync to Google Calendar', 'xdl-booking'); ?></a>
+						<p class="description">
+							<?php
+							echo $b->gcal_event_id
+								? esc_html__('Google Calendar: event created.', 'xdl-booking')
+								: esc_html__('Google Calendar: not synced yet.', 'xdl-booking');
+							?>
+						</p>
 						<a class="button-link-delete" href="<?php echo esc_url(self::delete_url($b->id)); ?>" onclick="return confirm('<?php echo esc_js(__('Delete this booking permanently?', 'xdl-booking')); ?>');"><?php esc_html_e('Delete booking', 'xdl-booking'); ?></a>
 					</div>
 				</div>
