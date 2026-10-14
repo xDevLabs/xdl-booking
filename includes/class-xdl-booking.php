@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 final class XDL_Booking {
 
 	const OPTION        = 'xdl_booking_settings';
-	const DB_VERSION    = '1.0.0';
+	const DB_VERSION    = '1.1.0';
 	const DB_OPTION     = 'xdl_booking_db_version';
 
 	const STATUS_PENDING   = 'pending';
@@ -43,6 +43,7 @@ final class XDL_Booking {
 			'class-xdl-booking-db.php',
 			'class-xdl-booking-availability.php',
 			'class-xdl-booking-mailer.php',
+			'class-xdl-booking-gcal.php',
 			'class-xdl-booking-rest.php',
 			'class-xdl-booking-frontend.php',
 		);
@@ -56,6 +57,7 @@ final class XDL_Booking {
 
 		new XDL_Booking_REST();
 		new XDL_Booking_Frontend();
+		new XDL_Booking_GCal();
 
 		if (is_admin()) {
 			require_once XDL_BOOKING_DIR . 'includes/class-xdl-booking-admin.php';
@@ -91,6 +93,9 @@ final class XDL_Booking {
 			'default_country'  => 'vn',
 			'accent_color'     => '#1f1f1f',
 			'success_message'  => '',
+			'gcal_enabled'     => 0,
+			'gcal_calendar_id' => '',
+			'gcal_credentials' => '',
 		);
 	}
 

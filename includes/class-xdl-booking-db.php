@@ -33,6 +33,7 @@ final class XDL_Booking_DB {
 			services TEXT NULL,
 			note TEXT NULL,
 			status VARCHAR(20) NOT NULL DEFAULT 'pending',
+			gcal_event_id VARCHAR(255) NOT NULL DEFAULT '',
 			ip VARCHAR(45) NOT NULL DEFAULT '',
 			created_at DATETIME NOT NULL,
 			updated_at DATETIME NOT NULL,
@@ -79,9 +80,19 @@ final class XDL_Booking_DB {
 		return (bool) $ok;
 	}
 
+	public static function set_gcal_event_id($id, $event_id) {
+		global $wpdb;
+		return (bool) $wpdb->update(self::table(), array('gcal_event_id' => (string) $event_id), array('id' => absint($id)));
+	}
+
 	public static function delete($id) {
 		global $wpdb;
-		return (bool) $wpdb->delete(self::table(), array('id' => absint($id)));
+		$row = self::get($id);
+		$ok  = (bool) $wpdb->delete(self::table(), array('id' => absint($id)));
+		if ($ok && $row) {
+			do_action('xdl_booking_deleted', $row);
+		}
+		return $ok;
 	}
 
 	/** Bookings that occupy slots, between two dates inclusive. */

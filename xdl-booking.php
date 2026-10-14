@@ -3,7 +3,7 @@
  * Plugin Name: XDL Booking
  * Plugin URI:  https://xdevlabs.com
  * Description: Appointment booking with calendar, time slots (with buffer between bookings), customer form, admin list/calendar views and email notifications. Use shortcode [xdl_booking] or the Bricks element.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Requires at least: 6.4
  * Requires PHP: 8.0
  * Author: xDevLabs
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define('XDL_BOOKING_VERSION', '1.0.0');
+define('XDL_BOOKING_VERSION', '1.1.0');
 define('XDL_BOOKING_FILE', __FILE__);
 define('XDL_BOOKING_DIR', plugin_dir_path(__FILE__));
 define('XDL_BOOKING_URL', plugin_dir_url(__FILE__));

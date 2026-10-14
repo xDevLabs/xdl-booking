@@ -18,6 +18,7 @@ final class XDL_Booking_Admin {
 		add_action('admin_enqueue_scripts', array($this, 'assets'));
 		add_action('admin_post_xdl_booking_status', array($this, 'handle_status'));
 		add_action('admin_post_xdl_booking_delete', array($this, 'handle_delete'));
+		add_action('admin_post_xdl_booking_gcal_test', array($this, 'handle_gcal_test'));
 		add_filter('set-screen-option', array($this, 'save_screen_option'), 10, 3);
 		add_filter('plugin_action_links_' . plugin_basename(XDL_BOOKING_FILE), array($this, 'plugin_links'));
 	}
@@ -143,6 +144,17 @@ final class XDL_Booking_Admin {
 		check_admin_referer('xdl_booking_delete_' . $id);
 		XDL_Booking_DB::delete($id);
 		wp_safe_redirect(add_query_arg('xdlb_deleted', 1, admin_url('admin.php?page=' . self::SLUG)));
+		exit;
+	}
+
+	public function handle_gcal_test() {
+		if (!current_user_can('manage_options')) {
+			wp_die(esc_html__('You are not allowed to do this.', 'xdl-booking'), 403);
+		}
+		check_admin_referer('xdl_booking_gcal_test');
+		$result = XDL_Booking_GCal::test_connection();
+		$args   = is_wp_error($result) ? array('xdlb_gcal' => 'fail') : array('xdlb_gcal' => 'ok');
+		wp_safe_redirect(add_query_arg($args, admin_url('admin.php?page=' . self::SLUG_SETTINGS)));
 		exit;
 	}
 
@@ -386,6 +398,22 @@ final class XDL_Booking_Admin {
 		$out['accent_color']    = sanitize_hex_color($in['accent_color'] ?? '') ?: $d['accent_color'];
 		$out['success_message'] = sanitize_textarea_field($in['success_message'] ?? '');
 
+		$out['gcal_enabled']     = empty($in['gcal_enabled']) ? 0 : 1;
+		$out['gcal_calendar_id'] = sanitize_text_field($in['gcal_calendar_id'] ?? '');
+		$out['gcal_credentials'] = (string) XDL_Booking::get('gcal_credentials');
+		$json                    = trim((string) ($in['gcal_credentials'] ?? ''));
+		if (!empty($in['gcal_credentials_clear'])) {
+			$out['gcal_credentials'] = '';
+		} elseif ('' !== $json) {
+			$creds = XDL_Booking_GCal::parse_credentials($json);
+			if ($creds) {
+				$out['gcal_credentials'] = wp_json_encode($creds);
+				delete_transient(XDL_Booking_GCal::TOKEN_KEY);
+			} else {
+				add_settings_error(XDL_Booking::OPTION, 'gcal_credentials', __('The Google service account JSON is invalid (needs client_email and a valid private_key). The previous credentials were kept.', 'xdl-booking'));
+			}
+		}
+
 		return $out;
 	}
 
@@ -412,6 +440,11 @@ final class XDL_Booking_Admin {
 		<div class="wrap">
 			<h1><?php esc_html_e('Booking settings', 'xdl-booking'); ?></h1>
 			<?php settings_errors(XDL_Booking::OPTION); ?>
+			<?php if ('ok' === ($_GET['xdlb_gcal'] ?? '')) : ?>
+				<div class="notice notice-success is-dismissible"><p><?php esc_html_e('Google Calendar connection works.', 'xdl-booking'); ?></p></div>
+			<?php elseif ('fail' === ($_GET['xdlb_gcal'] ?? '')) : ?>
+				<div class="notice notice-error is-dismissible"><p><?php esc_html_e('Google Calendar connection failed. See the last error below.', 'xdl-booking'); ?></p></div>
+			<?php endif; ?>
 
 			<div class="notice notice-info inline">
 				<p>
@@ -560,9 +593,77 @@ final class XDL_Booking_Admin {
 					</tr>
 				</table>
 
+				<?php $this->render_gcal_settings($s, $name); ?>
+
 				<?php submit_button(); ?>
 			</form>
+
+			<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+				<input type="hidden" name="action" value="xdl_booking_gcal_test">
+				<?php wp_nonce_field('xdl_booking_gcal_test'); ?>
+				<?php submit_button(__('Test Google Calendar connection', 'xdl-booking'), 'secondary', 'submit', false); ?>
+				<span class="description"><?php esc_html_e('Save settings first.', 'xdl-booking'); ?></span>
+			</form>
 		</div>
+		<?php
+	}
+
+	private function render_gcal_settings($s, $name) {
+		$creds      = XDL_Booking_GCal::credentials();
+		$from_const = XDL_Booking_GCal::credentials_from_constant();
+		$last_error = get_option(XDL_Booking_GCal::ERROR_OPTION);
+		?>
+		<h2 class="title"><?php esc_html_e('Google Calendar', 'xdl-booking'); ?></h2>
+		<p class="description">
+			<?php esc_html_e('Adds every booking to a Google Calendar and keeps it updated when the status changes. Cancelled or deleted bookings are removed from the calendar.', 'xdl-booking'); ?>
+		</p>
+		<table class="form-table" role="presentation">
+			<tr>
+				<th scope="row"><?php esc_html_e('Sync', 'xdl-booking'); ?></th>
+				<td>
+					<label>
+						<input type="checkbox" name="<?php echo esc_attr($name); ?>[gcal_enabled]" value="1" <?php checked(1, (int) $s['gcal_enabled']); ?>>
+						<?php esc_html_e('Send bookings to Google Calendar', 'xdl-booking'); ?>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="xdlb-gcal-calendar"><?php esc_html_e('Calendar ID', 'xdl-booking'); ?></label></th>
+				<td>
+					<input type="text" id="xdlb-gcal-calendar" name="<?php echo esc_attr($name); ?>[gcal_calendar_id]" value="<?php echo esc_attr($s['gcal_calendar_id']); ?>" class="regular-text" placeholder="shop@gmail.com">
+					<p class="description"><?php esc_html_e('Google Calendar → Settings → your calendar → Integrate calendar → Calendar ID.', 'xdl-booking'); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="xdlb-gcal-creds"><?php esc_html_e('Service account key', 'xdl-booking'); ?></label></th>
+				<td>
+					<?php if ($from_const) : ?>
+						<p><?php esc_html_e('Loaded from XDL_BOOKING_GCAL_CREDENTIALS in wp-config.php.', 'xdl-booking'); ?></p>
+					<?php else : ?>
+						<textarea id="xdlb-gcal-creds" name="<?php echo esc_attr($name); ?>[gcal_credentials]" rows="4" class="large-text code" autocomplete="off" placeholder="<?php esc_attr_e('Paste the full JSON key file here', 'xdl-booking'); ?>"></textarea>
+						<?php if ($creds) : ?>
+							<label><input type="checkbox" name="<?php echo esc_attr($name); ?>[gcal_credentials_clear]" value="1"> <?php esc_html_e('Remove saved key', 'xdl-booking'); ?></label>
+						<?php endif; ?>
+					<?php endif; ?>
+					<p class="description">
+						<?php if ($creds) : ?>
+							<?php
+							/* translators: %s: service account email */
+							echo wp_kses(sprintf(__('Key saved for %s. Share your calendar with this email and give it "Make changes to events". Paste a new key to replace it.', 'xdl-booking'), '<code>' . esc_html($creds['client_email']) . '</code>'), array('code' => array()));
+							?>
+						<?php else : ?>
+							<?php esc_html_e('Google Cloud → IAM & Admin → Service accounts → Keys → Add key → JSON. The key is never shown again after saving.', 'xdl-booking'); ?>
+						<?php endif; ?>
+					</p>
+				</td>
+			</tr>
+			<?php if ($last_error) : ?>
+				<tr>
+					<th scope="row"><?php esc_html_e('Last error', 'xdl-booking'); ?></th>
+					<td><p><code><?php echo esc_html($last_error['message'] ?? ''); ?></code> <span class="description"><?php echo esc_html(XDL_Booking::format_datetime($last_error['time'] ?? '')); ?></span></p></td>
+				</tr>
+			<?php endif; ?>
+		</table>
 		<?php
 	}
 }
